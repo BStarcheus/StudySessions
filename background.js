@@ -3,7 +3,7 @@ chrome.runtime.onInstalled.addListener(function() {
         //Initialize storage
         if (items.sessionsList) {
             //Don't delete existing sessions.
-            //This could run on update or reinstall.
+            //This can run on update or reinstall.
         } else {
             chrome.storage.sync.set({sessionsList: []});
         }

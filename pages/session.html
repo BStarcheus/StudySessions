@@ -3,17 +3,37 @@
     <head>
         <title></title>
         <style>
+            h1, button {
+                text-align: center;
+                margin: 20px auto;
+                display: block;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
 
+            }
+            th {
+                font-size: 14px;
+                padding: 10px 10px;
+                background-color: blue;
+                color: white;
+            }
+            td {
+                height: 40px;
+                text-align: center;
+                font-size:14px;
+                padding: 5px;
+                border-top: 1px solid black;
+            }
         </style>
     </head>
     <body>
         <div id="header">
-            <button id="back">Back</button>
-            <h1 id="title"></h1>
+            <button id="back">Back to Sessions</button>
+            <h1 id="titleh1"></h1>
         </div>
 
-        <ul id="noteList">
-        </ul>
         <script src="/pages/session.js"></script>
     </body>
 </html>

@@ -7,7 +7,8 @@ chrome.storage.sync.get("sessionsList", function(result) {
         document.body.appendChild(message);
     } else {
         //Sessions exist. Create a table listing all names and dates.
-        //
+        //Click on name or date to open a details page.
+        //Click on resume to make the session active.
         var table = document.createElement("table");
         var thead = document.createElement("thead");
         var tr = document.createElement("tr");
@@ -27,8 +28,11 @@ chrome.storage.sync.get("sessionsList", function(result) {
         for (var i = 0; i < result.sessionsList.length; i++) {
             var tr = document.createElement("tr");
             var name = document.createElement("td");
+            name.className = "name";
             var dlm = document.createElement("td");
+            dlm.className = "dlm";
             var resume = document.createElement("td");
+            resume.className = "resume";
 
             name.innerText = result.sessionsList[i].name;
             dlm.innerText = Date(result.sessionsList[i].dateLastModified).toString().substring(0,15);
@@ -39,6 +43,52 @@ chrome.storage.sync.get("sessionsList", function(result) {
             tr.appendChild(resume);
             tbody.appendChild(tr);
         }
+        table.addEventListener('click', function(event) {
+            //If the table is clicked, determine which type of cell was clicked
+
+            var td = event.target;
+            while (td !== this && !td.matches("td")) {
+                td = td.parentNode;
+            }
+            if (td === this) {
+                console.log("No table cell found");
+            } else {
+
+            //If it is the name element, set viewedSession to the name
+                if (td.className === "name") {
+                    chrome.storage.sync.set({viewedSession: td.innerText});
+                    window.open('/pages/session.html', '_self');
+                }
+            //If it is not the name element, get the name
+                else if (td.className === "dlm" || td.className === "resume") {
+                    var tdName = td;
+                    while (tdName !== this && !tdName.matches("tr")) {
+                        tdName = tdName.parentNode;
+                    }
+                    if (tdName === this) {
+                        console.log("No row element found");
+                    } else if (tdName.firstElementChild.className === "name") {
+                        tdName = tdName.firstElementChild;
+            //If it is dateLastModified element, set viewedSession to
+            //the name, and open the session page
+                        if (td.className === "dlm") {
+                            chrome.storage.sync.set({viewedSession: tdName.innerText});
+                            window.open('/pages/session.html', '_self');
+                        }
+            //If it is the resume element, set activeSession to name
+                        else if (td.className === "resume") {
+                            console.log("Resuming" + tdName.innerText);
+                            chrome.storage.sync.set({activeSession: tdName.innerText});
+                        }
+                    } else {
+                        console.log("No name element found");
+                    }
+                } else {
+                    console.log("Unknown table cell");
+                }
+            }
+        });
+
         table.appendChild(tbody);
         document.body.appendChild(table);
     }
@@ -67,6 +117,10 @@ newButton.addEventListener('click', function() {
     cancelButton.value = "cancel";
     cancelButton.addEventListener('click', function(event) {
         dialog.close();
+        var prev = document.getElementById("dialog1");
+        if (prev) {
+            prev.parentNode.removeChild(prev);
+        }
     });
 
     var submitButton = document.createElement("button");
@@ -98,9 +152,12 @@ newButton.addEventListener('click', function() {
                     name: textInput.value,
                     dateLastModified: new Date()
                 });
-                chrome.storage.sync.set({
-                    sessionsList: newList
-                });
+                chrome.storage.sync.set({sessionsList: newList});
+
+                //Setup an empty array of notes for this session
+                var newObj = {};
+                newObj[textInput.value] = [];
+                chrome.storage.sync.set(newObj);
                 dialog.close();
                 window.location.reload();
                 //Reload the page to show the new session.

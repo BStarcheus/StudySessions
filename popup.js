@@ -2,8 +2,13 @@ chrome.storage.sync.get("activeSession", function(result) {
     if (result.activeSession) {
         //If there is an active session, show the name,
         //and show the stop button.
-        var currentSession = document.createElement("div");
+        var currentSession = document.createElement("button");
+        currentSession.className = "popupButton";
         currentSession.innerText = result.activeSession;
+        currentSession.addEventListener('click', function() {
+            chrome.storage.sync.set({viewedSession: result.activeSession});
+            window.open('/pages/session.html', '_blank');
+        });
         document.body.appendChild(currentSession);
 
         var stopButton = document.createElement("button");
@@ -25,18 +30,18 @@ chrome.storage.sync.get("activeSession", function(result) {
         document.body.appendChild(newButton);
 
         //Show the resume button only if there is at least one existing session.
-        var resumeButton = document.createElement("button");
-        resumeButton.innerText = "Resume Last Session";
-        resumeButton.id = "resumeSession";
-        resumeButton.className = "popupButton";
-        resumeButton.addEventListener('click', function() {
-            chrome.storage.sync.get("sessionsList", function(result) {
-                chrome.storage.sync.set({activeSession: result.sessionsList[0].name});
-                window.location.reload();
-            });
-        });
         chrome.storage.sync.get("sessionsList", function(result) {
             if (result.sessionsList.length > 0) {
+                var resumeButton = document.createElement("button");
+                resumeButton.innerText = "Resume: " + result.sessionsList[0].name;
+                resumeButton.id = "resumeSession";
+                resumeButton.className = "popupButton";
+                resumeButton.addEventListener('click', function() {
+                    chrome.storage.sync.get("sessionsList", function(result) {
+                        chrome.storage.sync.set({activeSession: result.sessionsList[0].name});
+                        window.location.reload();
+                    });
+                });
                 document.body.appendChild(resumeButton);
             }
         });
@@ -72,6 +77,10 @@ var newInput = function() {
     cancelButton.value = "cancel";
     cancelButton.addEventListener('click', function(event) {
         dialog.close();
+        var prev = document.getElementById("dialog1");
+        if (prev) {
+            prev.parentNode.removeChild(prev);
+        }
     });
 
     var submitButton = document.createElement("button");
@@ -103,9 +112,12 @@ var newInput = function() {
                     name: textInput.value,
                     dateLastModified: new Date()
                 });
-                chrome.storage.sync.set({
-                    sessionsList: newList
-                });
+                chrome.storage.sync.set({sessionsList: newList});
+
+                //Setup an empty array of notes for this session
+                var newObj = {};
+                newObj[textInput.value] = [];
+                chrome.storage.sync.set(newObj);
                 dialog.close();
                 window.location.reload();
                 //Reload the popup to show the new session.
@@ -120,7 +132,6 @@ var newInput = function() {
     document.body.appendChild(dialog);
     dialog.showModal();
 };
-
 
 //Display validation errors on dialog box
 function validateErrors(err) {
