@@ -9,9 +9,9 @@ var newButton = function(event) {
             var button = document.createElement("button");
             var img = document.createElement("img");
             img.className = "newButtonClass";
-            img.src = chrome.runtime.getURL("/imgs/buttons.png");
-            img.style = "position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:50px;width:50px;";
-            button.style = "border:2px solid rgb(152,152,152);border-radius:50%;height:50px;width:50px;overflow:hidden;position:absolute;top:" + event.pageY + "px;left:" + event.pageX + "px;z-index: 9999";
+            img.src = chrome.runtime.getURL("/imgs/add.png");
+            img.style = "position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);height:50px;width:50px;max-width:300%;";
+            button.style = "background-color:white;border:2px solid black;border-radius:50%;height:40px;width:40px;overflow:hidden;position:absolute;top:" + event.pageY + "px;left:" + event.pageX + "px;z-index: 9999";
             button.appendChild(img);
 
             //Add the highlighted text to session notes
@@ -45,7 +45,7 @@ var newButton = function(event) {
                             dateLastModified: new Date()
                         });
                         chrome.storage.sync.set({sessionsList: newList});
-                    })
+                    });
                 });
                 this.parentNode.removeChild(this);
             });

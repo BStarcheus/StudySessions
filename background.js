@@ -16,10 +16,13 @@ chrome.runtime.onInstalled.addListener(function() {
 chrome.storage.onChanged.addListener(function(changes, areaName) {
     if (changes["activeSession"]) {
         if (changes["activeSession"].oldValue == null && changes["activeSession"].newValue) {
-            activateSession();
+            //Activate in all current tabs
+            firstTimeActivate();
+            //Activate in all future documents
             chrome.tabs.onUpdated.addListener(activateSession);
         } else if (changes["activeSession"].oldValue && changes["activeSession"].newValue == null) {
             chrome.tabs.onUpdated.removeListener(activateSession);
+            //Deactivate in all current tabs
             deactivateSession();
         } else {
             console.log("Extension just installed, or invalid change to activeSession.");
@@ -27,14 +30,36 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     }
 });
 
-var activateSession = function() {
-    chrome.tabs.executeScript({
-        file: 'activate.js'
+var firstTimeActivate = function() {
+    //Activate on all open tabs
+    chrome.tabs.query({}, function (result) {
+        for (var i = 0; i < result.length; i++) {
+            chrome.tabs.executeScript(result[i].id, {
+                file: 'activate.js'
+            });
+        }
     });
 };
+
+var activateSession = function(tabId, changeInfo, tab) {
+    //Activate on page load. Only run once per load of a page.
+    if (changeInfo && tab && changeInfo.status === "complete" && tab.status === "complete") {
+        chrome.tabs.executeScript({
+            file: 'activate.js'
+        });
+    }
+};
+
 var deactivateSession = function() {
-    chrome.tabs.executeScript({
-        code: "document.removeEventListener('pointerup', newButton);"
-         + "document.removeEventListener('pointerdown', removeButton);"
+    //Deactivate in all open tabs
+    chrome.tabs.query({}, function (result) {
+        for (var i = 0; i < result.length; i++) {
+            chrome.tabs.executeScript(result[i].id, {
+                code: "document.removeEventListener('mouseup', newButton);"
+                 + "document.removeEventListener('mousedown', removeButton);"
+                 + "var pastButton = document.getElementById('newButton');"
+                 + "pastButton.parentNode.removeChild(pastButton);"
+            });
+        }
     });
 };

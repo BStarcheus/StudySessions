@@ -2,7 +2,7 @@
     "name": "Study Sessions",
     "version": "1.0",
     "description": "Track your study session. Highlight text to save quick notes.",
-    "permissions": ["tabs", "activeTab", "declarativeContent", "storage", "<all_urls>", "notifications"],
+    "permissions": ["tabs", "activeTab", "declarativeContent", "storage", "<all_urls>"],
     "background": {
         "scripts": ["background.js"],
         "persistent": false

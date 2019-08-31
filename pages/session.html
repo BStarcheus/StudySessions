@@ -3,15 +3,28 @@
     <head>
         <title></title>
         <style>
-            h1, button {
+            body {
+                margin: 0px;
+            }
+            h1 {
                 text-align: center;
                 margin: 20px auto;
                 display: block;
             }
+            button#back {
+                position: absolute;
+                top: 25px;
+                left: 25px;
+            }
             table {
                 border-collapse: collapse;
                 width: 100%;
-
+            }
+            img {
+                height: 30px;
+                width: 30px;
+                margin: 5px;
+                vertical-align: middle;
             }
             th {
                 font-size: 14px;
@@ -22,9 +35,14 @@
             td {
                 height: 40px;
                 text-align: center;
-                font-size:14px;
-                padding: 5px;
+                font-size: 14px;
+                padding: 5px 10px;
                 border-top: 1px solid black;
+            }
+            dialog button {
+                margin: 5px;
+                text-align: center;
+                display: inline-block;
             }
         </style>
     </head>
