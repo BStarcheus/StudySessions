@@ -11,8 +11,8 @@ chrome.storage.sync.get("viewedSession", function(r) {
             //No notes exist yet
             var message = document.createElement("div");
             message.innerText = "No notes";
-            message.style = "font-size:16px;text-align:center;";
-            document.body.appendChild(message);
+            message.style = "font-size:16px;text-align:center;padding:40px;";
+            document.getElementById("pageContain").appendChild(message);
         } else {
             //Notes exist. Create a table listing all text and urls.
 
@@ -132,7 +132,7 @@ chrome.storage.sync.get("viewedSession", function(r) {
                 tbody.appendChild(tr);
             }
             table.appendChild(tbody);
-            document.body.appendChild(table);
+            document.getElementById("pageContain").appendChild(table);
         }
     });
 });

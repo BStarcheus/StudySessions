@@ -4,8 +4,8 @@ chrome.storage.sync.get("sessionsList", function(result) {
             //No sessions exist yet
             var message = document.createElement("div");
             message.innerText = "No sessions";
-            message.style = "font-size:16px;text-align:center;";
-            document.body.appendChild(message);
+            message.style = "font-size:16px;text-align:center;padding:40px;";
+            document.getElementById("pageContain").appendChild(message);
         } else {
             //Sessions exist. Create a table listing all names and dates.
             //Click on name or date to open a details page.
@@ -175,7 +175,7 @@ chrome.storage.sync.get("sessionsList", function(result) {
             });
 
             table.appendChild(tbody);
-            document.body.appendChild(table);
+            document.getElementById("pageContain").appendChild(table);
         }
     });
 });

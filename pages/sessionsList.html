@@ -5,11 +5,37 @@
         <style>
             body {
                 margin: 0px;
+                position: relative;
+                min-height: 100vh;
             }
-            h1, button#new {
+            #pageContain {
+                padding-bottom: 69px;
+            }
+            footer {
+                position: absolute;
+                bottom: 0;
+                height: 69px;
+                width: 100%;
+                background-color: rgb(225, 225, 225);
+                color: black;
+                text-align: center;
+            }
+            #header {
+                margin: 0px;
+                padding: 5px;
+                background-color: rgb(225, 225, 225);
+            }
+            h1 {
+                font-size: 25px;
                 text-align: center;
                 margin: 20px auto;
                 display: block;
+            }
+            button#new {
+                text-align: center;
+                margin: 20px auto;
+                display: block;
+                padding: 5px;
             }
             table {
                 border-collapse: collapse;
@@ -24,7 +50,7 @@
             th {
                 font-size: 14px;
                 padding: 10px 10px;
-                background-color: blue;
+                background-color: rgb(20, 44, 255);
                 color: white;
             }
             td {
@@ -42,11 +68,15 @@
         </style>
     </head>
     <body>
-        <div id="header">
-            <h1>Study Sessions</h1>
-            <button id="new">New Session</button>
+        <div id="pageContain">
+            <div id="header">
+                <h1>Study Sessions</h1>
+                <button id="new">New Session</button>
+            </div>
         </div>
-
+        <footer>
+            <p>Study Sessions<br>Created by Brandon Starcheus<br>Icons from <a href="https://www.icons8.com" target="_blank">icons8.com</a></p>
+        </footer>
         <script src="/pages/sessionsList.js"></script>
     </body>
 </html>
